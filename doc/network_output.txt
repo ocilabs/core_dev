@@ -1,0 +1,9 @@
+{
+    "core":{
+        "vcn_id":"ocid1.vcn.oc1.iad.xxx"}
+        "compartment_id":"ocid1.compartment.oc1..xxx",
+        "drg_id":"ocid1.drg.oc1.iad.xxx",
+        "internet_id":"ocid1.internetgateway.oc1.iad.xxx",
+        "nat_id":"ocid1.natgateway.oc1.iad.xxx",
+        "osn_id":"ocid1.servicegateway.oc1.iad.xxx",
+}

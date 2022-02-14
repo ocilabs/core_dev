@@ -1,0 +1,27 @@
+// Copyright (c) 2020 Oracle and/or its affiliates.
+// Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
+{
+    "compartment_id":"ocid1.tenancy.oc1..xxx",
+    "group_ids":{
+        "organization_service_dev_auditor":"ocid1.group.oc1..xxx",
+        "organization_service_dev_cloudops":"ocid1.group.oc1..xxx",
+        "organization_service_dev_dba":"ocid1.group.oc1..xxx",
+        "organization_service_dev_netops":"ocid1.group.oc1..xxx",
+        "organization_service_dev_secops":"ocid1.group.oc1..xxx",
+        "organization_service_dev_sysops":"ocid1.group.oc1..xxx"
+    },
+    "namespace_ids":{
+        "operation":"ocid1.tagnamespace.oc1..xxx"
+    },
+    "notifications":{
+        "activation":"ocid1.onstopic.oc1.iad.xxx",
+        "events":"ocid1.onstopic.oc1.iad.xxx"
+    },
+    "tenant_id":"ocid1.compartment.oc1..xxx",
+    "tag_ids":{
+        "application":"ocid1.tagdefinition.oc1..xxx",
+        "last_updated":"ocid1.tagdefinition.oc1..xxx",
+        "version":"ocid1.tagdefinition.oc1..xxx"
+    }
+}
