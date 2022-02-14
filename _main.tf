@@ -37,7 +37,6 @@ module "configuration" {
   input = {
     tenancy      = var.tenancy_ocid
     class        = var.class
-    parent       = var.parent
     owner        = var.owner
     organization = var.organization
     solution     = var.solution
