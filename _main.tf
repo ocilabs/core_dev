@@ -47,7 +47,7 @@ module "configuration" {
     internet     = var.internet
     nat          = var.nat
     ipv6         = var.ipv6
-    protect      = var.protect
+    unprotect      = var.unprotect
   }
 }
 output "tenancy"  {value = module.configuration.tenancy}
