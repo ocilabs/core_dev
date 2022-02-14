@@ -183,4 +183,4 @@ variables:
   protect:
     type: boolean
     title: "Protect administrator domains against destroy?"
-    required: false
+    required: true

@@ -87,13 +87,8 @@ variable "segments" {
       stage       = 0
       # The referenced segment need to have at least one subnet defined in subnets.tf file before running apply 
       topology    = ["host", "nodes", "container"]
-      # "ENABLE" or "DISABLE" access from public internet
-      internet    = "ENABLE"
       # Access to the Oracle Service Network, options include "DISABLE", "STORAGE" or "ALL"
       osn         = "ALL" 
-      # "ENABLE" or "DISABLE" Network Address Translation for private subnets
-      nat         = "ENABLE" 
-      ipv6        = false
     }
   ]
   description = "Network segments define a service toplogy with route rules and port filters between subnets"
@@ -103,7 +98,7 @@ variable "segments" {
 variable "protect" {
   type        = bool
   description = "A flage that allows to delete compartments with terraform destroy. This setting should only be changed by experienced users."
-  default     = true
+  default     = false
 }
 
 variable "domains" {

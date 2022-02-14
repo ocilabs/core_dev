@@ -10,7 +10,7 @@ output "network" {
         compartment  = contains(flatten(var.asset.domains[*].name), "network") ? "${local.service_name}_network_compartment" : local.service_name
         stage        = segment.stage
         cidr         = segment.cidr
-        ipv6         = segment.ipv6
+        ipv6         = var.input.ipv6
         gateways = {
             drg = {
                 name     = "${local.service_name}_${index(local.vcn_list, segment.name) + 1}_drg"
@@ -21,12 +21,12 @@ output "network" {
             }
             internet = {
                 name   = "${local.service_name}_${index(local.vcn_list, segment.name) + 1}_internet"
-                create = segment.internet == "ENABLE" ? true : false
+                create = var.input.internet == "ENABLE" ? true : false
             }
             nat = {
                 name          = "${local.service_name}_${index(local.vcn_list, segment.name) + 1}_nat"
-                create        = segment.nat == "ENABLE" ? true : false
-                block_traffic = segment.nat == "DISABLE" ? true : false
+                create        = var.input.nat == "ENABLE" ? true : false
+                block_traffic = var.input.nat == "DISABLE" ? true : false
             }
             osn = {
                 name     = "${local.service_name}_${index(local.vcn_list, segment.name) + 1}_osn"
