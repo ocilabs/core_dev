@@ -1,7 +1,7 @@
 // Copyright (c) 2020 Oracle and/or its affiliates.
 // Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
-// readme.md created with https://terraform-docs.io/: terraform-docs markdown --sort=false ./ > ./readme.md
+// readme.md created with https://terraform-docs.io/: terraform-docs markdown --sort=false ./ > ./README.md
 
 // --- provider settings --- //
 terraform {
