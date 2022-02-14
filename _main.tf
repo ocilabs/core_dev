@@ -37,12 +37,17 @@ module "configuration" {
   input = {
     tenancy      = var.tenancy_ocid
     class        = var.class
+    parent     = var.parent
     owner        = var.owner
     organization = var.organization
     solution     = var.solution
     repository   = var.repository
     stage        = var.stage
     region       = var.region
+    internet     = var.internet
+    nat          = var.nat
+    ipv6   = var.ipv6
+    protect = var.protect
   }
 }
 output "tenancy"  {value = module.configuration.tenancy}

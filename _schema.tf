@@ -7,9 +7,8 @@ variable "class" {
   description = "The tenancy classification sets boundaries for resource deployments"
   default     = "PAYG"
 }
-
 # Service Configuration
-variable "parentID" {
+variable "parent" {
   type = string
   description = "The Oracle Cloud Identifier (OCID) for a parent compartment, an encapsulating child compartment will be created to define the service resident. Usually this is the root compartment, hence the tenancy OCID."
   default="ocid_tenancy.xxx"
@@ -74,7 +73,7 @@ variable "nat" {
   default     = "ENABLE"
 }
 
-variable "enableIPv6" {
+variable "ipv6" {
   type = bool
   description = "Triggers the release of IPv6 addresses inside the VCN."
   default     = false
@@ -101,7 +100,7 @@ variable "segments" {
 }
 
 # Administration Domains
-variable "deleteCompartment" {
+variable "protect" {
   type        = bool
   description = "A flage that allows to delete compartments with terraform destroy. This setting should only be changed by experienced users."
   default     = true
