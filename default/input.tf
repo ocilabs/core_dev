@@ -11,7 +11,13 @@ variable "input" {
         solution     = string,
         repository   = string,
         stage        = string,
-        region       = string,
+        region       = string
+    })
+}
+
+variable "asset" {
+    description = "configuration paramenter for the service, defined through schema.tf"
+    type = object({
         domains      = list(any),
         segments     = list(any)
     })
@@ -38,14 +44,14 @@ locals {
         lower(substr(var.input.stage, 0, 3)),
     )
     classification = {
-        free_tier  = 0
-        paid       = 1
-        enterprise = 2
-        premium    = 3
+        FREE_TIER = 0
+        TRIAL     = 1
+        PAYG      = 2
+        UCC       = 3
     }
     lifecycle = {
         DEV  = 0
-        TEST = 1 
+        UAT  = 1 
         PROD = 2
     }
     tag_namespaces = {for namespace in local.controls : "${local.service_name}_${namespace.name}" => namespace.stage} 
@@ -61,10 +67,10 @@ locals {
         "class"     = var.input.class
     }
     group_map = zipmap(
-        flatten("${var.input.domains[*].roles}"),
-        flatten([for domain in var.input.domains : [for role in domain.roles : "${local.service_name}_${domain.name}_compartment"]])
+        flatten("${var.asset.domains[*].roles}"),
+        flatten([for domain in var.asset.domains : [for role in domain.roles : "${local.service_name}_${domain.name}_compartment"]])
     )
-    vcn_list   = var.input.segments[*].name
+    vcn_list   = var.asset.segments[*].name
     router_map = {for router in local.routers : router.name => {
         name     = router.name
         cpe      = router.cpe
@@ -80,22 +86,22 @@ locals {
         }]])
     }}
     application_profiles = [for firewall, traffic in local.firewall_map: traffic]
-    subnet_newbits = {for segment in var.input.segments : segment.name => zipmap(
+    subnet_newbits = {for segment in var.asset.segments : segment.name => zipmap(
         [for subnet in local.subnets : subnet.name if contains(segment.topology, subnet.topology)],
         [for subnet in local.subnets : subnet.newbits if contains(segment.topology, subnet.topology)]
     )}
-    subnet_cidr = {for segment in var.input.segments : segment.name => zipmap(
+    subnet_cidr = {for segment in var.asset.segments : segment.name => zipmap(
         keys(local.subnet_newbits[segment.name]),
         flatten(cidrsubnets(segment.cidr, values(local.subnet_newbits[segment.name])...))
     )}
-    defined_routes = {for segment in var.input.segments : segment.name => {
+    defined_routes = {for segment in var.asset.segments : segment.name => {
         "cpe"      = length(keys(local.router_map)) != 0 ? try(local.router_map[segment.name].cpe,local.router_map["default"].cpe) : null
         "internet" = length(keys(local.router_map)) != 0 ? try(local.router_map[segment.name].anywhere,local.router_map["default"].anywhere) : null
         "vcn"      = segment.cidr
         "osn"      = local.osn_cidrs.all
         "buckets"  = local.osn_cidrs.storage
     }}
-    zones = {for segment in var.input.segments : segment.name => merge(
+    zones = {for segment in var.asset.segments : segment.name => merge(
         local.defined_routes[segment.name],
         local.destinations[segment.name],
         local.subnet_cidr[segment.name]

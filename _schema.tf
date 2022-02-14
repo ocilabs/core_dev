@@ -12,6 +12,7 @@ variable "class" {
 variable "parentID" {
   type = string
   description = "The Oracle Cloud Identifier (OCID) for a parent compartment, an encapsulating child compartment will be created to define the service resident. Usually this is the root compartment, hence the tenancy OCID."
+  default="ocid_tenancy.xxx"
 }
 variable "organization"            { 
   type        = string
