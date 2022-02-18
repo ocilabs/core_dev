@@ -29,19 +29,25 @@ variableGroups:
   - stage
   - repository
 
+- title: "Service Topology"
+  visible: true
+  variables:
+  - host
+  - nodes
+  - container
+
 - title: "Network Options"
   visible: true
   variables:
+  - ipv6
   - internet
   - nat
-  - ipv6
-  - segments
+  - osn
 
 - title: "Domain Settings"
   visible: true
   variables:
-  - unprotect
-  - domains
+  - amend
 
 variables:
 # Tenancy
@@ -140,18 +146,32 @@ variables:
     type: string
     required: true
 
+# Service Topology
+  host:
+    type: boolean
+    title: "Enterprise Service"
+    required: false
+
+  nodes:
+    type: boolean
+    title: "Cloud Service"
+    required: false
+
+  container:
+    type: boolean
+    title: "Container Service"
+    required: false
+
 # Network Options
-  segments:
-    title: "Network Segments"
-    visible: false
-    description: "Defining a network topology"
-    type: list
+  ipv6:
+    type: boolean
+    title: "IPv6"
     required: true
+    default: false
 
   internet:
     type: enum
     title: "Internet access"
-    #default: "ENABLE"
     required: true
     enum:
       - ENABLE
@@ -160,27 +180,22 @@ variables:
   nat:
     type: enum
     title: "NAT for private subnets"
-    #default: "ENABLE"
     required: true
     enum:
       - ENABLE
       - DISABLE
 
-  ipv6:
-    type: boolean
-    title: "IPv6"
+  osn:
+    type: enum
+    title: "Scope of Oracle Cloud Services, attached to the service resident."
     required: true
-    default: false
+    enum:
+      - ALL
+      - STORAGE
+      - DISABLE
 
 # Administration Domains
-  domains:
-    title: "Administrator Domains"
-    description: "Enabling a seperation of concerns"
-    visible: false
-    type: list
-    required: true
-
-  unprotect:
+  amend:
     type: boolean
-    title: "unprotect administrator domains against destroy?"
+    title: "Allow administrator domains to be destroyed?"
     required: true

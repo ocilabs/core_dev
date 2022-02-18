@@ -11,12 +11,13 @@ terraform {
     }
   }
 }
-provider "oci" { 
-  alias = "init"
+provider "oci" {
+  alias  = "service"
+  region = var.region
 }
 provider "oci" {
   alias  = "home"
-  region = module.configuration.tenancy.region.key
+  region = module.configuration.tenancy.region.name
 }
 // --- provider settings  --- //
 
@@ -28,12 +29,13 @@ variable "tenancy_ocid" {
 // --- DEV configuration --- //
 
 // --- tenancy configuration --- //
+locals {
+  domains  = jsondecode(file("${path.module}/default/resident/domains.json"))
+  segments = jsondecode(file("${path.module}/default/network/segments.json"))
+}
 module "configuration" {
   source         = "./default/"
-  asset = {
-    domains      = var.domains
-    segments     = var.segments
-  }
+  providers = {oci = oci.service}
   input = {
     tenancy      = var.tenancy_ocid
     class        = var.class
@@ -43,12 +45,14 @@ module "configuration" {
     repository   = var.repository
     stage        = var.stage
     region       = var.region
-    internet     = var.internet
-    nat          = var.nat
-    ipv6         = var.ipv6
-    unprotect      = var.unprotect
+  }
+  resolve = {
+    domains      = local.domains
+    segments     = local.segments
   }
 }
+// --- tenancy configuration --- //
+
 output "tenancy"  {value = module.configuration.tenancy}
 output "resident" {value = module.configuration.resident}
 output "network"  {value = module.configuration.network}
