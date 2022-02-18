@@ -19,8 +19,9 @@ variable "input" {
 variable "resolve" {
   description = "configuration paramenter for the service, defined through schema.tf"
   type = object({
-    domains      = list(any),
-    segments     = list(any)
+    topologies = list(string),
+    domains    = list(any),
+    segments   = list(any)
   })
 }
 
@@ -88,8 +89,8 @@ locals {
   }}
   application_profiles = [for firewall, traffic in local.firewall_map: traffic]
   subnet_newbits = {for segment in var.resolve.segments : segment.name => zipmap(
-    [for subnet in local.subnets : subnet.name if contains(segment.topology, subnet.topology)],
-    [for subnet in local.subnets : subnet.newbits if contains(segment.topology, subnet.topology)]
+    [for subnet in local.subnets : subnet.name if contains(var.resolve.topologies, subnet.topology)],
+    [for subnet in local.subnets : subnet.newbits if contains(var.resolve.topologies, subnet.topology)]
   )}
   subnet_cidr = {for segment in var.resolve.segments : segment.name => zipmap(
     keys(local.subnet_newbits[segment.name]),
