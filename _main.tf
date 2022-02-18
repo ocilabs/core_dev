@@ -45,6 +45,7 @@ module "configuration" {
     repository   = var.repository
     stage        = var.stage
     region       = var.region
+    osn          = var.osn
   }
   resolve = {
     domains      = local.domains
