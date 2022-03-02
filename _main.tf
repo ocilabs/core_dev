@@ -56,6 +56,6 @@ module "configuration" {
 }
 // --- tenancy configuration --- //
 
-output "tenancy"  {value = module.configuration.tenancy}
-output "resident" {value = module.configuration.resident}
+#output "tenancy"  {value = module.configuration.tenancy}
+#output "resident" {value = module.configuration.resident}
 output "network"  {value = module.configuration.network}
