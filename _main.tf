@@ -32,6 +32,7 @@ variable "tenancy_ocid" {
 locals {
   topologies = flatten(compact([var.host == true ? "host" : "", var.nodes == true ? "nodes" : "", var.container == true ? "container" : ""]))
   domains    = jsondecode(file("${path.module}/default/resident/domains.json"))
+  wallets    = jsondecode(file("${path.module}/default/encryption/wallets.json"))
   segments   = jsondecode(file("${path.module}/default/network/segments.json"))
 }
 module "configuration" {
@@ -52,10 +53,12 @@ module "configuration" {
     topologies = local.topologies
     domains    = local.domains
     segments   = local.segments
+    wallets    = local.wallets
   }
 }
 // --- tenancy configuration --- //
 
-#output "tenancy"  {value = module.configuration.tenancy}
-#output "resident" {value = module.configuration.resident}
-output "network"  {value = module.configuration.network}
+#output "tenancy"    {value = module.configuration.tenancy}
+#output "resident"   {value = module.configuration.resident}
+output "encryption" {value = module.configuration.encryption}
+#output "network"    {value = module.configuration.network}
