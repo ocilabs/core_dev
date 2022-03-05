@@ -22,7 +22,7 @@ variable "resolve" {
     topologies = list(string),
     domains    = list(any),
     segments   = list(any),
-    wallets   = list(any),
+    wallets    = list(any),
   })
 }
 
@@ -33,6 +33,7 @@ locals {
   controls   = jsondecode(file("${path.module}/resident/controls.json"))
   tags       = jsondecode(file("${path.module}/resident/tags.json"))
   signatures = jsondecode(file("${path.module}/encryption/signatures.json"))
+  secrets    = jsondecode(file("${path.module}/encryption/secrets.json"))
   subnets    = jsondecode(file("${path.module}/network/subnets.json"))
   routers    = jsondecode(file("${path.module}/network/routers.json"))
   routes     = jsondecode(file("${path.module}/network/routes.json"))
