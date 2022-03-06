@@ -34,6 +34,7 @@ locals {
   domains    = jsondecode(file("${path.module}/default/resident/domains.json"))
   wallets    = jsondecode(file("${path.module}/default/encryption/wallets.json"))
   segments   = jsondecode(file("${path.module}/default/network/segments.json"))
+  databases  = jsondecode(file("${path.module}/default/database/adb.json"))
 }
 module "configuration" {
   source         = "./default/"
@@ -52,13 +53,15 @@ module "configuration" {
   resolve = {
     topologies = local.topologies
     domains    = local.domains
-    segments   = local.segments
     wallets    = local.wallets
+    segments   = local.segments
+    databases  = local.databases
   }
 }
 // --- tenancy configuration --- //
 
-output "tenancy"    {value = module.configuration.tenancy}
-output "resident"   {value = module.configuration.resident}
-output "encryption" {value = module.configuration.encryption}
-output "network"    {value = module.configuration.network}
+#output "tenancy"    {value = module.configuration.tenancy}
+#output "resident"   {value = module.configuration.resident}
+#output "encryption" {value = module.configuration.encryption}
+#output "network"    {value = module.configuration.network}
+output "databases"       {value = module.configuration.databases}

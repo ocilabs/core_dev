@@ -1,8 +1,0 @@
-[
-  {
-    "name"    : "test",
-    "stage"   : 0,
-    "cores"   : 1,
-    "storage" : 256
-  }
-]
