@@ -4,7 +4,7 @@
     "type"    : "OLTP",
     "stage"   : 0,
     "cores"   : 1,
-    "storage" : 256,
+    "storage" : 1,
     "license" : "LICENSE_INCLUDED",
     "version" : "19c"
   },
@@ -13,7 +13,7 @@
     "type"    : "DW",
     "stage"   : 0,
     "cores"   : 1,
-    "storage" : 256,
+    "storage" : 1,
     "license" : "LICENSE_INCLUDED",
     "version" : "19c"
   },
@@ -22,7 +22,7 @@
     "type"    : "APEX",
     "stage"   : 0,
     "cores"   : 1,
-    "storage" : 256,
+    "storage" : 1,
     "license" : "LICENSE_INCLUDED",
     "version" : "19c"
   },
@@ -31,7 +31,7 @@
     "type"    : "AJD",
     "stage"   : 0,
     "cores"   : 1,
-    "storage" : 256,
+    "storage" : 1,
     "license" : "LICENSE_INCLUDED",
     "version" : "19c"
   }
