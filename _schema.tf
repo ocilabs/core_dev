@@ -103,3 +103,9 @@ variable "osn" {
   description = "Configures the scope for the service gateway"
   default     = "ALL"
 }
+
+variable "adb" {
+  type = string
+  description = "Configures the type of database"
+  default     = "TRANSACTION_PROCESSING"
+}

@@ -16,6 +16,11 @@ variableGroups:
   - tenancy_ocid
   - class
 
+- title: "Lifecycle"
+  visible: true
+  variables:
+  - stage
+
 - title: "Service Resident"
   visible: true
   variables:
@@ -26,7 +31,6 @@ variableGroups:
   - organization
   - solution
   - owner
-  - stage
   - repository
 
 - title: "Service Topology"
