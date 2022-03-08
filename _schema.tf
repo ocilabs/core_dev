@@ -104,7 +104,7 @@ variable "osn" {
   default     = "ALL"
 }
 
-variable "adb" {
+variable "adb_type" {
   type = string
   description = "Configures the type of database"
   default     = "TRANSACTION_PROCESSING"
