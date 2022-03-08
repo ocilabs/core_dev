@@ -49,7 +49,6 @@ module "configuration" {
     stage        = var.stage
     region       = var.region
     osn          = var.osn
-    database     = var.database
   }
   resolve = {
     topologies = local.topologies
