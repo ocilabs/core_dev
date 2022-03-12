@@ -39,14 +39,14 @@ output "network" {
       #route_table   = "${local.service_name}_${index(local.vcn_list, segment.name) + 1}_${destination.name}_route"
       ecurity_list = "${local.service_name}_${index(local.vcn_list, segment.name) + 1}_${subnet.name}_firewall"
     } if contains(var.resolve.topologies, subnet.topology)}
-    routes = flatten([for destination in local.destinations: {
+    route_table_input = [for destination in local.destinations: {
       name         = "${local.service_name}_${index(local.vcn_list, segment.name) + 1}_${destination.name}_route"
       gateway      = "${local.service_name}_${index(local.vcn_list, segment.name) + 1}_${destination.gateway}"
       destinations = zipmap(
         [for section in destination.sections: matchkeys(keys(local.zones[segment.name]), keys(local.zones[segment.name]), [section])[0]],
         [for section in destination.sections: matchkeys(values(local.zones[segment.name]), keys(local.zones[segment.name]), [section])[0]]   
       )
-    }])
+    }]
     security_lists = {for subnet in local.subnets : subnet.name => { 
       display_name = "${local.service_name}_${index(local.vcn_list, segment.name) + 1}_${subnet.name}_firewall"
       ingress      = {for traffic in local.firewall_map[subnet.firewall].incoming: "${traffic.firewall}_${traffic.zone}_${traffic.port}" => {
