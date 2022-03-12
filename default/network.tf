@@ -52,6 +52,9 @@ output "network" {
         max_port    = matchkeys(local.ports[*].max, local.ports[*].name, [traffic.port])[0]
       }}
     }}
+    security_groups = {for firewall in local.firewalls : firewall.name => { 
+      display_name = "${local.service_name}_${index(local.vcn_list, segment.name) + 1}_${firewall.name}_firewall"
+    }}
     security_zones = local.zones
     subnets = {for subnet in local.subnets : subnet.name => {
       topology      = subnet.topology
