@@ -64,6 +64,6 @@ module "configuration" {
 
 #output "tenancy"    {value = module.configuration.tenancy}
 #output "resident"   {value = module.configuration.resident}
-#output "encryption" {value = module.configuration.encryption}
+output "encryption" {value = module.configuration.encryption}
 #output "network"    {value = module.configuration.network}
 #output "databases"  {value = module.configuration.databases}
