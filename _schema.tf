@@ -61,6 +61,12 @@ variable "region" {
 }
 
 # Service Topologies
+variable "cloud" {
+  type        = bool
+  description = "Provisioning a network topology allows to access Oracle's public cloud services via a private transfer domain."
+  default     = true
+}
+
 variable "host" {
   type        = bool
   description = "Provisioning a host topology prepares a service resident to deploy a traditional enterprise application with presentation, application and database tier."
