@@ -24,8 +24,8 @@ locals {
         "storage" = "ocid_storage_tbd"
     }
     osn_cidrs = {
-        "all"     = "x.x.x.x/x"
-        "storage" = "x.x.x.x/x"
+        "all"     = "all-iad-services-in-oracle-services-network"
+        "storage" = "oci-iad-objectstorage"
     }
 }
 // --- DEV Tenancy Configuration ---//
