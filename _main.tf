@@ -13,7 +13,7 @@ terraform {
 }
 provider "oci" {
   alias  = "service"
-  region = var.region
+  region = var.location
 }
 provider "oci" {
   alias  = "home"
@@ -22,10 +22,10 @@ provider "oci" {
 // --- provider settings  --- //
 
 // --- DEV configuration --- //
-variable "tenancy_ocid" {
-    default="ocid_tenancy.xxx"
-    description = "A unique identifier for the root tenancy, provided by the cloud controller"
-}
+variable "tenancy_ocid" {default="ocid_tenancy.xxx"}
+variable "region" {default="us-ashburn-1"}
+variable "compartment_ocid" {default="ocid_compartment.xxx"}
+variable "current_user_ocid" {default="ocid_user.xxx"}
 // --- DEV configuration --- //
 
 // --- tenancy configuration --- //
@@ -47,7 +47,7 @@ module "configuration" {
     solution     = var.solution
     repository   = var.repository
     stage        = var.stage
-    region       = var.region
+    region       = var.location
     osn          = var.osn
     adb          = var.adb_type
   }
@@ -62,8 +62,8 @@ module "configuration" {
 
 // --- tenancy configuration --- //
 
-#output "tenancy"    {value = module.configuration.tenancy}
-#output "resident"   {value = module.configuration.resident}
+output "tenancy"    {value = module.configuration.tenancy}
+output "resident"   {value = module.configuration.resident}
 #output "encryption" {value = module.configuration.encryption}
-output "network"    {value = module.configuration.network}
+#output "network"    {value = module.configuration.network}
 #output "databases"  {value = module.configuration.databases}
