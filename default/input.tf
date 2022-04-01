@@ -38,7 +38,7 @@ locals {
   lifecycle      = jsondecode(file("${path.module}/resident/lifecycle.json"))
   profiles       = jsondecode(file("${path.module}/network/profiles.json"))
   rfc6335        = jsondecode(file("${path.module}/network/rfc6335.json"))
-  roles          = jsondecode(templatefile("${path.module}/resident/roles.json", {service = local.service_name}))
+  operators      = jsondecode(templatefile("${path.module}/resident/operators.json", {service = local.service_name}))
   routers        = jsondecode(file("${path.module}/network/routers.json"))
   signatures     = jsondecode(file("${path.module}/encryption/signatures.json"))
   secrets        = jsondecode(file("${path.module}/encryption/secrets.json"))

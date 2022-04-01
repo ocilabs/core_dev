@@ -13,12 +13,12 @@ output "resident" {
             name = local.region_name
         }
         compartments = {for domain in var.resolve.domains : "${local.service_name}_${domain.name}_compartment" => domain.stage}
-        groups       = {for role in flatten(var.resolve.domains[*].roles) : role => "${local.service_name}_${role}"}
-        policies     = {for role in local.roles : role.name => {
-            name        = "${local.service_name}_${role.name}"
-            compartment = local.group_map[role.name]
-            rules       = role.rules
-        }if contains(keys(local.group_map), role.name) }
+        groups       = {for operator in flatten(var.resolve.domains[*].operators) : operator => "${local.service_name}_${operator}"}
+        policies     = {for operator in local.operators : operator.name => {
+            name        = "${local.service_name}_${operator.name}"
+            compartment = local.group_map[operator.name]
+            rules       = operator.rules
+        }if contains(keys(local.group_map), operator.name) }
         notifications = {for channel in local.channels : "${local.service_name}_${channel.name}" => {
             topic     = "${local.service_name}_${channel.name}"
             protocol  = channel.type
