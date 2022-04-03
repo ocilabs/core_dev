@@ -12,8 +12,8 @@ output "resident" {
             key  = local.region_key
             name = local.region_name
         }
-        compartments = {for domain in var.resolve.domains : "${local.service_name}_${domain.name}_compartment" => domain.stage}
-        groups       = {for operator in flatten(var.resolve.domains[*].operators) : operator => "${local.service_name}_${operator}"}
+        compartments = {for domain in var.resident.domains : "${local.service_name}_${domain.name}_compartment" => domain.stage}
+        groups       = {for operator in flatten(var.resident.domains[*].operators) : operator => "${local.service_name}_${operator}"}
         policies     = {for operator in local.operators : operator.name => {
             name        = "${local.service_name}_${operator.name}"
             compartment = local.group_map[operator.name]
@@ -23,7 +23,7 @@ output "resident" {
             topic     = "${local.service_name}_${channel.name}"
             protocol  = channel.type
             endpoint  = channel.address
-        } if contains(distinct(flatten("${var.resolve.domains[*].channels}")), channel.name)}
+        } if contains(distinct(flatten("${var.resident.domains[*].channels}")), channel.name)}
         tag_namespaces = {for namespace in local.controls : "${local.service_name}_${namespace.name}" => namespace.stage}
         tags = {for tag in local.tags : tag.name => {
             name          = tag.name

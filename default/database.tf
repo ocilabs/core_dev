@@ -4,7 +4,7 @@
 output "databases" {
   value = {
     autonomous = [for database in local.adb : {
-      compartment  = contains(flatten(var.resolve.domains[*].name), "database") ? "${local.service_name}_database_compartment" : local.service_name
+      compartment  = contains(flatten(var.resident.domains[*].name), "database") ? "${local.service_name}_database_compartment" : local.service_name
       stage        = database.stage
       name         = database.name
       cores        = database.cores

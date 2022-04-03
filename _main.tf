@@ -32,38 +32,35 @@ variable "current_user_ocid" {default="ocid_user.xxx"}
 locals {
   topologies = flatten(compact([var.cloud == true ? "cloud" : "", var.host == true ? "host" : "", var.nodes == true ? "nodes" : "", var.container == true ? "container" : ""]))
   domains    = jsondecode(file("${path.module}/default/resident/domains.json"))
-  wallets    = jsondecode(file("${path.module}/default/encryption/wallets.json"))
   segments   = jsondecode(file("${path.module}/default/network/segments.json"))
-  databases  = jsondecode(file("${path.module}/default/database/adb.json"))
 }
 module "configuration" {
   source         = "./default/"
   providers = {oci = oci.service}
   input = {
-    tenancy      = var.tenancy_ocid
+    adb          = var.adb_type
     class        = var.class
-    owner        = var.owner
+    region       = var.location
     organization = var.organization
-    solution     = var.solution
+    osn          = var.osn
+    owner        = var.owner
     repository   = var.repository
     stage        = var.stage
-    region       = var.location
-    osn          = var.osn
-    adb          = var.adb_type
+    solution     = var.solution
+    tenancy      = var.tenancy_ocid
+    wallet       = var.wallet_type
   }
-  resolve = {
+  resident = {
     topologies = local.topologies
     domains    = local.domains
-    wallets    = local.wallets
     segments   = local.segments
-    databases  = local.databases
   }
 }
 
 // --- tenancy configuration --- //
 
 #output "tenancy"    {value = module.configuration.tenancy}
-output "resident"   {value = module.configuration.resident}
+#output "resident"   {value = module.configuration.resident}
 #output "encryption" {value = module.configuration.encryption}
 #output "network"    {value = module.configuration.network}
-#output "databases"  {value = module.configuration.databases}
+output "databases"  {value = module.configuration.databases}
