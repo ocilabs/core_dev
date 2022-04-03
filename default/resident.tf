@@ -3,11 +3,11 @@
 
 output "resident" {
     value = {
-        owner        = var.input.owner
-        repository   = var.input.repository
+        owner        = var.service.owner
+        repository   = var.service.repository
         name         = local.service_name
         label        = local.service_label
-        stage        = local.lifecycle[var.input.stage]
+        stage        = local.lifecycle[var.service.stage]
         region       = {
             key  = local.region_key
             name = local.region_name

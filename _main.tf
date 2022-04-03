@@ -34,11 +34,17 @@ locals {
   domains    = jsondecode(file("${path.module}/default/resident/domains.json"))
   segments   = jsondecode(file("${path.module}/default/network/segments.json"))
 }
+
 module "configuration" {
   source         = "./default/"
   providers = {oci = oci.service}
-  input = {
-    adb          = var.adb_type
+  resident = {
+    topologies = local.topologies
+    domains    = local.domains
+    segments   = local.segments
+  }
+  service = {
+    adb          = "${var.adb_type}_${var.adb_size}"
     class        = var.class
     region       = var.location
     organization = var.organization
@@ -50,17 +56,11 @@ module "configuration" {
     tenancy      = var.tenancy_ocid
     wallet       = var.wallet_type
   }
-  resident = {
-    topologies = local.topologies
-    domains    = local.domains
-    segments   = local.segments
-  }
 }
-
 // --- tenancy configuration --- //
 
 #output "tenancy"    {value = module.configuration.tenancy}
 #output "resident"   {value = module.configuration.resident}
 #output "encryption" {value = module.configuration.encryption}
 #output "network"    {value = module.configuration.network}
-output "databases"  {value = module.configuration.databases}
+output "database"  {value = module.configuration.database}

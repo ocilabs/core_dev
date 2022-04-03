@@ -11,7 +11,7 @@ variable "resident" {
   })
 }
 
-variable "input" {
+variable "service" {
   description = "configuration paramenter for the service, defined through schema.tf"
   type = object({
     adb          = string,
@@ -30,9 +30,10 @@ variable "input" {
 
 locals {
   # Input Parameter
-  adb            = jsondecode(file("${path.module}/database/adb.json"))
+  adb_types      = jsondecode(file("${path.module}/database/adb.json"))
+  adb_sizes      = jsondecode(file("${path.module}/database/sizes.json"))
   budgets        = jsondecode(file("${path.module}/resident/budgets.json"))
-  channels       = jsondecode(templatefile("${path.module}/resident/channels.json", {owner = var.input.owner}))
+  channels       = jsondecode(templatefile("${path.module}/resident/channels.json", {owner = var.service.owner}))
   controls       = jsondecode(file("${path.module}/resident/controls.json"))
   classification = jsondecode(file("${path.module}/resident/classification.json"))
   destinations   = jsondecode(file("${path.module}/network/destinations.json"))
@@ -51,12 +52,6 @@ locals {
   wallets        = jsondecode(file("${path.module}/encryption/wallets.json"))
 
   #application_profiles = [for firewall, traffic in local.port_filter: traffic]
-  database = {
-    APEX           = "APEX"
-    DATA_WAREHOUSE = "DW"
-    JSON           = "ADJ"
-    TRANSACTION_PROCESSING = "OLTP"
-  }
   defined_routes = {for segment in var.resident.segments : segment.name => {
     "cpe"      = length(keys(local.router_map)) != 0 ? try(local.router_map[segment.name].cpe,local.router_map["default"].cpe) : null
     "anywhere" = length(keys(local.router_map)) != 0 ? try(local.router_map[segment.name].anywhere,local.router_map["default"].anywhere) : null
@@ -71,9 +66,9 @@ locals {
   }if contains(flatten(distinct(flatten(local.firewalls[*].outgoing))), destination.name)}
   freeform_tags = {
     "framework" = "ocloud"
-    "owner"     = var.input.owner
-    "lifecycle" = var.input.stage
-    "class"     = var.input.class
+    "owner"     = var.service.owner
+    "lifecycle" = var.service.stage
+    "class"     = var.service.class
   }
   group_map = zipmap(
     flatten("${var.resident.domains[*].operators}"),
@@ -111,12 +106,12 @@ locals {
     if contains(flatten(distinct(flatten(local.firewalls[*].outgoing))), destination.name)
   })
   # Computed Parameter
-  service_name  = lower("${var.input.organization}_${var.input.solution}_${var.input.stage}")
+  service_name  = lower("${var.service.organization}_${var.service.solution}_${var.service.stage}")
   service_label = format(
     "%s%s%s", 
-    lower(substr(var.input.organization, 0, 3)), 
-    lower(substr(var.input.solution, 0, 2)),
-    lower(substr(var.input.stage, 0, 3)),
+    lower(substr(var.service.organization, 0, 3)), 
+    lower(substr(var.service.solution, 0, 2)),
+    lower(substr(var.service.stage, 0, 3)),
   )
   subnet_cidr = {for segment in var.resident.segments : segment.name => zipmap(
     keys(local.subnet_newbits[segment.name]),
