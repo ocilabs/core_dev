@@ -13,13 +13,19 @@ variable "adb_type" {
   default     = "TRANSACTION_PROCESSING"
 }
 
+variable "budget" {
+  type = number
+  description = "Sets a monthly budget for the service"
+  default     = 500
+}
+
 variable "class" {
   type        = string
   description = "The tenancy classification sets boundaries for resource deployments"
   default     = "PAYG"
 }
 
-variable "cloud" {
+variable "management" {
   type        = bool
   description = "Provisioning a network topology allows to access Oracle's public cloud services via a private transfer domain."
   default     = true
@@ -121,7 +127,7 @@ variable "osn" {
   default     = "ALL"
 }
 
-variable "wallet_type" {
+variable "wallet" {
   type = string
   description = "Creates a wallet to store secrets"
   default     = "Software"

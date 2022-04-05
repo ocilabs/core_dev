@@ -30,7 +30,7 @@ variable "current_user_ocid" {default="ocid_user.xxx"}
 
 // --- tenancy configuration --- //
 locals {
-  topologies = flatten(compact([var.cloud == true ? "cloud" : "", var.host == true ? "host" : "", var.nodes == true ? "nodes" : "", var.container == true ? "container" : ""]))
+  topologies = flatten(compact([var.management == true ? "cloud" : "", var.host == true ? "host" : "", var.nodes == true ? "nodes" : "", var.container == true ? "container" : ""]))
   domains    = jsondecode(file("${path.module}/default/resident/domains.json"))
   segments   = jsondecode(file("${path.module}/default/network/segments.json"))
 }
@@ -38,6 +38,12 @@ locals {
 module "configuration" {
   source         = "./default/"
   providers = {oci = oci.service}
+  tenancy = {
+    tenancy_id     = var.tenancy_ocid
+    compartment_id = var.compartment_ocid
+    home           = var.region
+    user_id        = var.current_user_ocid
+  }
   resident = {
     topologies = local.topologies
     domains    = local.domains
@@ -45,6 +51,7 @@ module "configuration" {
   }
   service = {
     adb          = "${var.adb_type}_${var.adb_size}"
+    budget       = var.budget
     class        = var.class
     region       = var.location
     organization = var.organization
@@ -54,13 +61,13 @@ module "configuration" {
     stage        = var.stage
     solution     = var.solution
     tenancy      = var.tenancy_ocid
-    wallet       = var.wallet_type
+    wallet       = var.wallet
   }
 }
 // --- tenancy configuration --- //
 
 #output "tenancy"    {value = module.configuration.tenancy}
-#output "resident"   {value = module.configuration.resident}
+output "resident"   {value = module.configuration.resident}
 #output "encryption" {value = module.configuration.encryption}
 #output "network"    {value = module.configuration.network}
-output "database"  {value = module.configuration.database}
+#output "database"  {value = module.configuration.database}
