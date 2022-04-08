@@ -22,9 +22,9 @@ provider "oci" {
 // --- provider settings  --- //
 
 // --- DEV configuration --- //
-variable "tenancy_ocid" {default="ocid_tenancy.xxx"}
-variable "region" {default="us-ashburn-1"}
-variable "compartment_ocid" {default="ocid_compartment.xxx"}
+variable "tenancy_ocid"      {default="ocid_tenancy.xxx"}
+variable "region"            {default="us-ashburn-1"}
+variable "compartment_ocid"  {default="ocid_compartment.xxx"}
 variable "current_user_ocid" {default="ocid_user.xxx"}
 // --- DEV configuration --- //
 
@@ -38,7 +38,7 @@ locals {
 module "configuration" {
   source         = "./default/"
   providers = {oci = oci.service}
-  tenancy = {
+  account = {
     tenancy_id     = var.tenancy_ocid
     compartment_id = var.compartment_ocid
     home           = var.region
