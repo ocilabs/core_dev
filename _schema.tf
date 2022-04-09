@@ -114,9 +114,9 @@ variable "solution"            {
 variable "stage"           { 
   type = string
   description = "The stage variable triggers lifecycle related resources to be provisioned"
-  default = "DEV"           # Lifecycle stage for the code base
+  default = "DEVELOPMENT"           # Lifecycle stage for the code base
   validation {
-    condition     = length(regexall("^[A-Za-z][A-Za-z0-9]{1,3}$", var.stage)) > 0
+    condition     = length(regexall("^[A-Za-z][A-Za-z0-9]{1,12}$", var.stage)) > 0
     error_message = "A service_name variable is required and must contain alphanumeric characters only, start with a letter and 4 character max."
   }
 }
