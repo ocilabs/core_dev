@@ -26,6 +26,7 @@ variable "service" {
     adb          = string,
     budget       = number,
     class        = string,
+    encrypt      = bool,
     owner        = string,
     organization = string,
     osn          = string,

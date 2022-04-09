@@ -53,6 +53,7 @@ module "configuration" {
     adb          = "${var.adb_type}_${var.adb_size}"
     budget       = var.budget
     class        = var.class
+    encrypt      = var.create_wallet
     region       = var.location
     organization = var.organization
     osn          = var.osn
@@ -70,4 +71,4 @@ module "configuration" {
 #output "resident"   {value = module.configuration.resident}
 output "encryption" {value = module.configuration.encryption}
 #output "network"    {value = module.configuration.network}
-#output "database"  {value = module.configuration.database}
+output "database"  {value = module.configuration.database}

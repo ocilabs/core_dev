@@ -4,7 +4,7 @@
 variable "adb_size" {
   type = string
   description = "Configures the size of database"
-  default     = "small"
+  default     = "SMALL"
 }
 
 variable "adb_type" {
@@ -25,15 +25,21 @@ variable "class" {
   default     = "PAYG"
 }
 
-variable "management" {
-  type        = bool
-  description = "Provisioning a network topology allows to access Oracle's public cloud services via a private transfer domain."
-  default     = true
-}
-
 variable "container" {
   type        = bool
   description = "Provisioning a container topology prepares a service resident to deploy cloud native services on Oracle's Kubernetes Engine (OKE)."
+  default     = true
+}
+
+variable "create_adb" {
+  type        = bool
+  description = "Define whether a database is created or not"
+  default     = false
+}
+
+variable "create_wallet" {
+  type        = bool
+  description = "Creates a wallet to store secrets"
   default     = true
 }
 
@@ -61,6 +67,12 @@ variable "location" {
   default     = "us-ashburn-1"
 }
 
+variable "management" {
+  type        = bool
+  description = "Provisioning a network topology allows to access Oracle's public cloud services via a private transfer domain."
+  default     = true
+}
+
 variable "nat" {
   type = string
   description = "Enables or disables routes through a NAT Gateway."
@@ -81,6 +93,12 @@ variable "organization"            {
     condition     = length(regexall("^[A-Za-z][A-Za-z]{1,26}$", var.organization)) > 0
     error_message = "The service_name variable is required and must contain upto 15 alphanumeric characters only and start with a letter."
   }
+}
+
+variable "osn" {
+  type = string
+  description = "Configures the scope for the service gateway"
+  default     = "ALL"
 }
 
 variable "owner" {
@@ -121,14 +139,8 @@ variable "stage"           {
   }
 }
 
-variable "osn" {
-  type = string
-  description = "Configures the scope for the service gateway"
-  default     = "ALL"
-}
-
 variable "wallet" {
   type = string
-  description = "Creates a wallet to store secrets"
-  default     = "Software"
+  description = "Defines the vault type."
+  default     = "SOFTWARE"
 }
