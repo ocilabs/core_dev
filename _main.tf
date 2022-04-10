@@ -49,7 +49,7 @@ module "configuration" {
     domains    = local.domains
     segments   = local.segments
   }
-  service = {
+  solution = {
     adb          = "${var.adb_type}_${var.adb_size}"
     budget       = var.budget
     class        = var.class
@@ -67,8 +67,8 @@ module "configuration" {
 }
 // --- tenancy configuration --- //
 
-#output "tenancy"    {value = module.configuration.tenancy}
-#output "resident"   {value = module.configuration.resident}
+output "account"    {value = module.configuration.tenancy}
+output "service"    {value = module.configuration.resident}
 output "encryption" {value = module.configuration.encryption}
-#output "network"    {value = module.configuration.network}
-output "database"  {value = module.configuration.database}
+output "network"    {value = module.configuration.network}
+output "database"   {value = module.configuration.database}

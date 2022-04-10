@@ -248,12 +248,12 @@ variables:
     title: "Select the lifecycle stage for the deployment"
     description: "Selecting the lifecycle stage preselects an appropriate collection of operational controls"
     type: enum
-    default: "DEV"
+    default: "DEVELOPMENT"
     required: true
     enum:
-      - DEV
-      - UAT
-      - PROD
+      - DEVELOPMENT
+      - TEST
+      - PRODUCTION
 
   tenancy_ocid:
     title: "Tenancy ID"
