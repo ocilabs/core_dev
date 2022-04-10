@@ -119,12 +119,12 @@ variable "repository" {
   default     = "https://github.com/torstenboettjer/ocloud-default-configuration"
 }
 
-variable "solution"            { 
+variable "name"            { 
   type        = string
-  description =  "The solution represents an unique identifier for a service defined on root compartment level"
+  description =  "The service represents an unique identifier for a service defined on root compartment level"
   default     = "Service"   # Define a name that identifies the service
   validation {
-    condition     = length(regexall("^[A-Za-z][A-Za-z]{1,26}$", var.solution)) > 0
+    condition     = length(regexall("^[A-Za-z][A-Za-z]{1,26}$", var.name)) > 0
     error_message = "The service_name variable is required and must contain alphanumeric characters only, start with a letter and 15 character max."
   }
 }

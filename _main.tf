@@ -49,18 +49,18 @@ module "configuration" {
     domains    = local.domains
     segments   = local.segments
   }
-  service = {
+  solution = {
     adb          = "${var.adb_type}_${var.adb_size}"
     budget       = var.budget
     class        = var.class
     encrypt      = var.create_wallet
     region       = var.location
+    stage        = var.stage
+    name         = var.name
     organization = var.organization
     osn          = var.osn
     owner        = var.owner
     repository   = var.repository
-    stage        = var.stage
-    solution     = var.solution
     tenancy      = var.tenancy_ocid
     wallet       = var.wallet
   }

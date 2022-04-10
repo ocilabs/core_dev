@@ -28,7 +28,7 @@ variableGroups:
   - compartment_ocid
   - current_user_ocid
   - organization
-  - solution
+  - name
   - owner
   - repository
 
@@ -234,8 +234,8 @@ variables:
     type: string
     required: false
 
-  solution:
-    title: "Name of the solution"
+  name:
+    title: "Name of the service"
     description: "Identifier for the service, the name should be unique within the tenancy"
     type: string
     default: "Name"
