@@ -44,12 +44,12 @@ module "configuration" {
     home           = var.region
     user_id        = var.current_user_ocid
   }
-  resident = {
+  service = {
     topologies = local.topologies
     domains    = local.domains
     segments   = local.segments
   }
-  solution = {
+  schema = {
     adb          = "${var.adb_type}_${var.adb_size}"
     budget       = var.budget
     class        = var.class
@@ -67,8 +67,8 @@ module "configuration" {
 }
 // --- tenancy configuration --- //
 
-#output "tenancy"    {value = module.configuration.tenancy}
-#output "service"    {value = module.configuration.service}
-#output "encryption" {value = module.configuration.encryption}
-#output "network"    {value = module.configuration.network}
+output "tenancy"    {value = module.configuration.tenancy}
+output "resident"   {value = module.configuration.resident}
+output "encryption" {value = module.configuration.encryption}
+output "network"    {value = module.configuration.network}
 output "database"   {value = module.configuration.database}

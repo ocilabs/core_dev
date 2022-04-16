@@ -3,8 +3,8 @@
 
 output "tenancy" {
   value = {
-    id       = var.solution.tenancy
-    class    = local.classification[var.solution.class]
+    id       = var.schema.tenancy
+    class    = local.classification[var.schema.class]
     buckets  = local.storage_namespace
     region   = {
       key  = local.home_region_key

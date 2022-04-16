@@ -1,13 +1,13 @@
 // Copyright (c) 2020 Oracle and/or its affiliates.
 // Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
-output "service" {
+output "resident" {
   value = {
     budgets = merge(
       zipmap(
-        flatten([for period in local.periods: [for alert in local.alerts: "${local.service_name}_${lower(period.type)}" if alert.name == "compartment" && period.name == "default" && var.solution.budget > 0]]),
+        flatten([for period in local.periods: [for alert in local.alerts: "${local.service_name}_${lower(period.type)}" if alert.name == "compartment" && period.name == "default" && var.schema.budget > 0]]),
         flatten([for period in local.periods: [for alert in local.alerts: {
-          amount         = var.solution.budget
+          amount         = var.schema.budget
           budget_processing_period_start_offset = period.offset
           display_name   = "${local.service_name}_${lower(period.type)}"
           reset_period   = period.type
@@ -15,11 +15,11 @@ output "service" {
           target_type    = "COMPARTMENT"
           threshold      = alert.threshold
           threshold_type = alert.measure
-        } if alert.name == "compartment" && period.name == "default" && var.solution.budget > 0]])
+        } if alert.name == "compartment" && period.name == "default" && var.schema.budget > 0]])
       ),
       zipmap(
-        flatten([for domain in var.resident.domains: [for period in local.periods: [for alert in local.alerts: "${domain.name}_${lower(period.type)}" if alert.name == "compartment" && period.name == "default" && domain.budget > 0]]]),
-        flatten([for domain in var.resident.domains: [for period in local.periods: [for alert in local.alerts: {
+        flatten([for domain in var.service.domains: [for period in local.periods: [for alert in local.alerts: "${domain.name}_${lower(period.type)}" if alert.name == "compartment" && period.name == "default" && domain.budget > 0]]]),
+        flatten([for domain in var.service.domains: [for period in local.periods: [for alert in local.alerts: {
           amount = domain.budget
           budget_processing_period_start_offset = period.offset
           display_name   = "${domain.name}_${lower(period.type)}"
@@ -44,16 +44,16 @@ output "service" {
         }if budget.alert == alert.name && budget.period == period.name]]])
       )
     )
-    compartments = {for domain in var.resident.domains : "${local.service_name}_${domain.name}_compartment" => domain.stage}
-    groups       = {for operator in flatten(var.resident.domains[*].operators) : operator => "${local.service_name}_${operator}"}
+    compartments = {for domain in var.service.domains : "${local.service_name}_${domain.name}_compartment" => domain.stage}
+    groups       = {for operator in flatten(var.service.domains[*].operators) : operator => "${local.service_name}_${operator}"}
     label        = local.service_label
     name         = local.service_name
     notifications = {for channel in local.channels : "${local.service_name}_${channel.name}" => {
       topic     = "${local.service_name}_${channel.name}"
       protocol  = channel.type
       endpoint  = channel.address
-    } if contains(distinct(flatten("${var.resident.domains[*].channels}")), channel.name)}
-    owner        = var.solution.owner
+    } if contains(distinct(flatten("${var.service.domains[*].channels}")), channel.name)}
+    owner        = var.schema.owner
     policies     = {for operator in local.operators : operator.name => {
       name        = "${local.service_name}_${operator.name}"
       compartment = local.group_map[operator.name]
@@ -63,8 +63,8 @@ output "service" {
       key  = local.region_key
       name = local.region_name
     }
-    repository   = var.solution.repository
-    stage        = local.lifecycle[var.solution.stage]
+    repository   = var.schema.repository
+    stage        = local.lifecycle[var.schema.stage]
     tag_namespaces = {for namespace in local.controls : "${local.service_name}_${namespace.name}" => namespace.stage}
     tags = {for tag in local.tags : tag.name => {
       name          = tag.name
