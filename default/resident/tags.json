@@ -1,42 +1,22 @@
 [
     {
-        "name"          :"cost_center",
-        "values"        : ["IT", "HR", "Sales"],
-        "cost_tracking" : true
-    },
-    {
-        "name"          : "cost_type",
-        "values"        : ["operation", "management", "development"],
-        "cost_tracking" : true
-    },
-    {
-        "name"          : "created_by",
-        "values"        : "name",
-        "cost_tracking" : true
-    },
-    {
         "name"          : "created_on",
-        "values"        : "date",
-        "cost_tracking" : false
+        "values"        : "date"
     },
     {
         "name"          : "application",
-        "values"        : ["ITSM", "ERP", "SCM", "PLM", "CX"],
-        "cost_tracking" : false
+        "values"        : ["ITSM", "ERP", "SCM", "PLM", "CX"]
     },
     {
         "name"          : "version",
-        "values"        : 0,
-        "cost_tracking" : false
+        "values"        : 0
     },
     {
         "name"          : "last_updated",
-        "values"        : "date",
-        "cost_tracking" : false
+        "values"        : "date"
     },
     {
         "name"          : "confidentiality",
-        "values"        : ["public", "confidential", "secret"],
-        "cost_tracking" : false
+        "values"        : ["public", "confidential", "secret"]
     }
 ]

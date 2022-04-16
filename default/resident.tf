@@ -44,8 +44,12 @@ output "resident" {
         }if budget.alert == alert.name && budget.period == period.name]]])
       )
     )
-    compartments = {for domain in var.settings.domains : "${local.service_name}_${domain.name}_compartment" => domain.stage}
-    groups       = {for operator in flatten(var.settings.domains[*].operators) : operator => "${local.service_name}_${operator}"}
+    compartments = {
+      for domain in var.settings.domains : "${local.service_name}_${domain.name}_compartment" => domain.stage
+    }
+    groups       = {
+      for operator in flatten(var.settings.domains[*].operators) : operator => "${local.service_name}_${operator}"
+    }
     label        = local.service_label
     name         = local.service_name
     notifications = {for channel in local.channels : "${local.service_name}_${channel.name}" => {
@@ -65,14 +69,26 @@ output "resident" {
     }
     repository   = var.options.repository
     stage        = local.lifecycle[var.options.stage]
-    tag_namespaces = {for namespace in local.controls : "${local.service_name}_${namespace.name}" => namespace.stage}
-    tags = {for tag in local.tags : tag.name => {
-      name          = tag.name
-      namespace     = local.tag_map[tag.name]
-      stage         = local.tag_namespaces["${local.tag_map[tag.name]}"]
-      values        = tag.values
-      default       = length(flatten([tag.values])) > 1 ? element(tag.values,0) : tostring(tag.values)
-      cost_tracking = tag.cost_tracking
-    }}
+    tag_namespaces = {
+      for namespace in local.controls : "${local.service_name}_${namespace.name}" => namespace.stage
+    }
+    tags = merge(
+      {for tag in local.tags : tag.name => {
+        name          = tag.name
+        namespace     = local.tag_map[tag.name]
+        stage         = local.tag_namespaces["${local.tag_map[tag.name]}"]
+        values        = tag.values
+        default       = length(flatten([tag.values])) > 1 ? element(tag.values,0) : tostring(tag.values)
+        cost_tracking = false
+      }},
+      {for tag in keys(local.cost_tracker): tag => {
+        name          = tag
+        namespace     = local.tag_map[tag]
+        stage         = local.tag_namespaces["${local.tag_map[tag]}"]
+        values        = local.cost_tracker[tag]
+        default       = local.cost_tracker[tag].0
+        cost_tracking = true
+      }}
+    )
   }
 }

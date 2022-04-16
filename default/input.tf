@@ -79,7 +79,7 @@ locals {
   tags           = jsondecode(file("${path.module}/resident/tags.json"))
   wallets        = jsondecode(file("${path.module}/encryption/wallets.json"))
 
-  #application_profiles = [for firewall, traffic in local.port_filter: traffic]
+  cost_tracker = {for budget in local.budgets : budget.tag => budget.name...}
   defined_routes = {for segment in var.settings.segments : segment.name => {
     "cpe"      = length(keys(local.router_map)) != 0 ? try(local.router_map[segment.name].cpe,local.router_map["default"].cpe) : null
     "anywhere" = length(keys(local.router_map)) != 0 ? try(local.router_map[segment.name].anywhere,local.router_map["default"].anywhere) : null
