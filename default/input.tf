@@ -46,7 +46,7 @@ locals {
   alerts         = jsondecode(file("${path.module}/resident/alerts.json"))
   budgets        = jsondecode(templatefile("${path.module}/resident/budgets.json", {user = var.account.user_id}))
   channels       = jsondecode(templatefile("${path.module}/resident/channels.json", {owner = var.options.owner}))
-  controls       = jsondecode(file("${path.module}/resident/controls.json"))
+  controls       = jsondecode(templatefile("${path.module}/resident/controls.json", {date = "date"}))
   classification = jsondecode(file("${path.module}/resident/classification.json"))
   destinations   = jsondecode(file("${path.module}/network/destinations.json"))
   firewalls      = jsondecode(file("${path.module}/network/firewalls.json"))
@@ -150,11 +150,11 @@ locals {
     [for subnet in local.subnets : subnet.newbits if contains(var.settings.topologies, subnet.topology)]
   )}
   # Merge tags with with the respective namespace information
-  tag_map = zipmap(
-    flatten([for tag in local.controls[*].tags : tag]),
-    flatten([for control in local.controls : [for tag in control.tags : "${local.service_name}_${control.name}"]])
-  ) 
-  tag_namespaces = {for namespace in local.controls : "${local.service_name}_${namespace.name}" => namespace.stage} 
+  #tag_map = zipmap(
+  #  flatten([for tag in local.controls[*].tags : tag]),
+  #  flatten([for control in local.controls : [for tag in control.tags : "${local.service_name}_${control.name}"]])
+  #) 
+  #tag_namespaces = {for namespace in local.controls : "${local.service_name}_${namespace.name}" => namespace.stage} 
   vcn_list   = var.settings.segments[*].name
   zones = {for segment in var.settings.segments : segment.name => merge(
     local.defined_routes[segment.name],

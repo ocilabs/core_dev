@@ -69,9 +69,8 @@ output "resident" {
     }
     repository   = var.options.repository
     stage        = local.lifecycle[var.options.stage]
-    tag_namespaces = {
-      for namespace in local.controls : "${local.service_name}_${namespace.name}" => namespace.stage
-    }
+    tag_namespaces = {for control in keys({for control in local.controls : control.name => control.monitor...}): "${local.service_name}_${control}" => min([for monitor in local.controls: monitor.stage if monitor.name == control]...)}
+    /*
     tags = merge(
       {for tag in local.tags : tag.name => {
         name          = tag.name
@@ -90,5 +89,6 @@ output "resident" {
         cost_tracking = true
       }}
     )
+    */
   }
 }
