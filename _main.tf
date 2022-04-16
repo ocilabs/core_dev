@@ -44,12 +44,12 @@ module "configuration" {
     home           = var.region
     user_id        = var.current_user_ocid
   }
-  service = {
+  settings = {
     topologies = local.topologies
     domains    = local.domains
     segments   = local.segments
   }
-  schema = {
+  options = {
     adb          = "${var.adb_type}_${var.adb_size}"
     budget       = var.budget
     class        = var.class

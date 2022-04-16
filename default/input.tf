@@ -11,7 +11,7 @@ variable "account" {
   })
 }
 
-variable "service" {
+variable "settings" {
   description = "configuration paramenter for the service, defined through schema.tf"
   type = object({
     topologies = list(string),
@@ -20,7 +20,7 @@ variable "service" {
   })
 }
 
-variable "schema" {
+variable "options" {
   description = "configuration paramenter for the service, defined through schema.tf"
   type = object({
     adb          = string,
@@ -45,7 +45,7 @@ locals {
   adb_sizes      = jsondecode(file("${path.module}/database/sizes.json"))
   alerts         = jsondecode(file("${path.module}/resident/alerts.json"))
   budgets        = jsondecode(templatefile("${path.module}/resident/budgets.json", {user = var.account.user_id}))
-  channels       = jsondecode(templatefile("${path.module}/resident/channels.json", {owner = var.schema.owner}))
+  channels       = jsondecode(templatefile("${path.module}/resident/channels.json", {owner = var.options.owner}))
   controls       = jsondecode(file("${path.module}/resident/controls.json"))
   classification = jsondecode(file("${path.module}/resident/classification.json"))
   destinations   = jsondecode(file("${path.module}/network/destinations.json"))
@@ -80,7 +80,7 @@ locals {
   wallets        = jsondecode(file("${path.module}/encryption/wallets.json"))
 
   #application_profiles = [for firewall, traffic in local.port_filter: traffic]
-  defined_routes = {for segment in var.service.segments : segment.name => {
+  defined_routes = {for segment in var.settings.segments : segment.name => {
     "cpe"      = length(keys(local.router_map)) != 0 ? try(local.router_map[segment.name].cpe,local.router_map["default"].cpe) : null
     "anywhere" = length(keys(local.router_map)) != 0 ? try(local.router_map[segment.name].anywhere,local.router_map["default"].anywhere) : null
     "vcn"      = segment.cidr
@@ -94,13 +94,13 @@ locals {
   }if contains(flatten(distinct(flatten(local.firewalls[*].outgoing))), destination.name)}
   freeform_tags = {
     "framework" = "ocloud"
-    "owner"     = var.schema.owner
-    "lifecycle" = var.schema.stage
-    "class"     = var.schema.class
+    "owner"     = var.options.owner
+    "lifecycle" = var.options.stage
+    "class"     = var.options.class
   }
   group_map = zipmap(
-    flatten("${var.service.domains[*].operators}"),
-    flatten([for domain in var.service.domains : [for operator in domain.operators : "${local.service_name}_${domain.name}_compartment"]])
+    flatten("${var.settings.domains[*].operators}"),
+    flatten([for domain in var.settings.domains : [for operator in domain.operators : "${local.service_name}_${domain.name}_compartment"]])
   )
   ports = concat(local.rfc6335, local.profiles)
   port_map = {for firewall in local.firewalls : firewall.name => flatten(distinct(flatten([for zone in firewall.incoming : local.sources[zone]])))}
@@ -134,20 +134,20 @@ locals {
     if contains(flatten(distinct(flatten(local.firewalls[*].outgoing))), destination.name)
   })
   # Computed Parameter
-  service_name  = lower("${var.schema.organization}_${var.schema.name}_${var.schema.stage}")
+  service_name  = lower("${var.options.organization}_${var.options.name}_${var.options.stage}")
   service_label = format(
     "%s%s%s", 
-    lower(substr(var.schema.organization, 0, 3)), 
-    lower(substr(var.schema.name, 0, 2)),
-    lower(substr(var.schema.stage, 0, 3)),
+    lower(substr(var.options.organization, 0, 3)), 
+    lower(substr(var.options.name, 0, 2)),
+    lower(substr(var.options.stage, 0, 3)),
   )
-  subnet_cidr = {for segment in var.service.segments : segment.name => zipmap(
+  subnet_cidr = {for segment in var.settings.segments : segment.name => zipmap(
     keys(local.subnet_newbits[segment.name]),
     flatten(cidrsubnets(segment.cidr, values(local.subnet_newbits[segment.name])...))
   )}
-  subnet_newbits = {for segment in var.service.segments : segment.name => zipmap(
-    [for subnet in local.subnets : subnet.name if contains(var.service.topologies, subnet.topology)],
-    [for subnet in local.subnets : subnet.newbits if contains(var.service.topologies, subnet.topology)]
+  subnet_newbits = {for segment in var.settings.segments : segment.name => zipmap(
+    [for subnet in local.subnets : subnet.name if contains(var.settings.topologies, subnet.topology)],
+    [for subnet in local.subnets : subnet.newbits if contains(var.settings.topologies, subnet.topology)]
   )}
   # Merge tags with with the respective namespace information
   tag_map = zipmap(
@@ -155,8 +155,8 @@ locals {
     flatten([for control in local.controls : [for tag in control.tags : "${local.service_name}_${control.name}"]])
   ) 
   tag_namespaces = {for namespace in local.controls : "${local.service_name}_${namespace.name}" => namespace.stage} 
-  vcn_list   = var.service.segments[*].name
-  zones = {for segment in var.service.segments : segment.name => merge(
+  vcn_list   = var.settings.segments[*].name
+  zones = {for segment in var.settings.segments : segment.name => merge(
     local.defined_routes[segment.name],
     local.sections[segment.name],
     local.subnet_cidr[segment.name]
