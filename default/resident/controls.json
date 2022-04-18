@@ -1,24 +1,26 @@
 [
     {
-        "name"    : "operation",
+        "name"    : "application",
+        "monitor" : "operation",
         "stage"   : 0,
-        "monitor" : "application",
         "values"  : ["IT", "HR", "Sales"]
-    },{
-        "name"    : "operation",
-        "stage"   : 0,
-        "monitor" : "version",
-        "values"  : "0.0.1"
-    },{
-        "name"    : "operation",
-        "stage"   : 0,
-        "monitor" : "last_updated",
-        "values"  : "${date}"
     },
     {
-        "name"    : "governance",
+        "name"    : "version",
+        "monitor" : "operation",
+        "stage"   : 0,
+        "values"  : ["0.0.1"]
+    },
+    {
+        "name"    : "last_updated",
+        "monitor" : "operation",
+        "stage"   : 0,
+        "values"  : ["${date}"]
+    },
+    {
+        "name"    : "confidentiality",
+        "monitor" : "governance",
         "stage"   : 2,
-        "monitor" : "confidentiality",
         "values"  : ["public", "confidential", "secret"]
     }
 ]
