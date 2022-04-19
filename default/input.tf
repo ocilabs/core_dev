@@ -40,22 +40,13 @@ variable "options" {
 }
 
 locals {
-  # Input Parameter
-  adb_types      = jsondecode(file("${path.module}/database/adb.json"))
-  adb_sizes      = jsondecode(file("${path.module}/database/sizes.json"))
-  alerts         = jsondecode(file("${path.module}/resident/alerts.json"))
-  budgets        = jsondecode(templatefile("${path.module}/resident/budgets.json", {user = var.account.user_id}))
-  channels       = jsondecode(templatefile("${path.module}/resident/channels.json", {owner = var.options.owner}))
-  controls       = jsondecode(templatefile("${path.module}/resident/controls.json", {date = timestamp()}))
-  classification = jsondecode(file("${path.module}/resident/classification.json"))
-  destinations   = jsondecode(file("${path.module}/network/destinations.json"))
-  firewalls      = jsondecode(file("${path.module}/network/firewalls.json"))
-  lifecycle      = jsondecode(file("${path.module}/resident/lifecycle.json"))
-  profiles       = jsondecode(file("${path.module}/network/profiles.json"))
+  # General Settings
   rfc6335        = jsondecode(file("${path.module}/../library/rfc6335.json"))
-  operators      = jsondecode(templatefile("${path.module}/resident/operators.json", {service = local.service_name}))
+  backup         = jsondecode(file("${path.module}/../library/backup.json"))
+  classification = jsondecode(file("${path.module}/../library/classification.json"))
+  lifecycle      = jsondecode(file("${path.module}/../library/lifecycle.json"))
   /*
-  policies       = jsondecode(templatefile("${path.module}/resident/policies.json", {
+  policies       = jsondecode(templatefile("${path.module}/../library/policies.json", {
     resident     = oci_identity_compartment.resident.name,
     application  = "${oci_identity_compartment.resident.name}_application_compartment",
     network      = "${oci_identity_compartment.resident.name}_network_compartment",
@@ -69,15 +60,30 @@ locals {
     #workspace_OCID = "${local.service_name}_workspace_OCID",
   }))
   */
+  # Service Settings
+  alerts         = jsondecode(file("${path.module}/resident/alerts.json"))
+  budgets        = jsondecode(templatefile("${path.module}/resident/budgets.json", {user = var.account.user_id}))
+  channels       = jsondecode(templatefile("${path.module}/resident/channels.json", {owner = var.options.owner}))
+  controls       = jsondecode(templatefile("${path.module}/resident/controls.json", {date = timestamp()}))
+  operators      = jsondecode(templatefile("${path.module}/resident/operators.json", {service = local.service_name}))
   periods        = jsondecode(file("${path.module}/resident/periods.json"))
+  # Network Settings
+  destinations   = jsondecode(file("${path.module}/network/destinations.json"))
+  firewalls      = jsondecode(file("${path.module}/network/firewalls.json"))
+  profiles       = jsondecode(file("${path.module}/network/profiles.json"))
   routers        = jsondecode(file("${path.module}/network/routers.json"))
-  signatures     = jsondecode(file("${path.module}/encryption/signatures.json"))
-  secrets        = jsondecode(file("${path.module}/encryption/secrets.json"))
   sections       = jsondecode(file("${path.module}/network/sections.json"))
   sources        = jsondecode(file("${path.module}/network/sources.json"))
   subnets        = jsondecode(file("${path.module}/network/subnets.json"))
+  # Database Settings
+  adb_types      = jsondecode(file("${path.module}/database/adb.json"))
+  adb_sizes      = jsondecode(file("${path.module}/database/sizes.json"))
+  # Encryption Settings
+  signatures     = jsondecode(file("${path.module}/encryption/signatures.json"))
+  secrets        = jsondecode(file("${path.module}/encryption/secrets.json"))
   wallets        = jsondecode(file("${path.module}/encryption/wallets.json"))
 
+  # Local variables
   defined_routes = {for segment in var.settings.segments : segment.name => {
     "cpe"      = length(keys(local.router_map)) != 0 ? try(local.router_map[segment.name].cpe,local.router_map["default"].cpe) : null
     "anywhere" = length(keys(local.router_map)) != 0 ? try(local.router_map[segment.name].anywhere,local.router_map["default"].anywhere) : null
