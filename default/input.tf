@@ -46,7 +46,7 @@ locals {
   alerts         = jsondecode(file("${path.module}/resident/alerts.json"))
   budgets        = jsondecode(templatefile("${path.module}/resident/budgets.json", {user = var.account.user_id}))
   channels       = jsondecode(templatefile("${path.module}/resident/channels.json", {owner = var.options.owner}))
-  controls       = jsondecode(templatefile("${path.module}/resident/controls.json", {date = "date"}))
+  controls       = jsondecode(templatefile("${path.module}/resident/controls.json", {date = timestamp()}))
   classification = jsondecode(file("${path.module}/resident/classification.json"))
   destinations   = jsondecode(file("${path.module}/network/destinations.json"))
   firewalls      = jsondecode(file("${path.module}/network/firewalls.json"))
@@ -77,6 +77,7 @@ locals {
   sources        = jsondecode(file("${path.module}/network/sources.json"))
   subnets        = jsondecode(file("${path.module}/network/subnets.json"))
   wallets        = jsondecode(file("${path.module}/encryption/wallets.json"))
+
   defined_routes = {for segment in var.settings.segments : segment.name => {
     "cpe"      = length(keys(local.router_map)) != 0 ? try(local.router_map[segment.name].cpe,local.router_map["default"].cpe) : null
     "anywhere" = length(keys(local.router_map)) != 0 ? try(local.router_map[segment.name].anywhere,local.router_map["default"].anywhere) : null
