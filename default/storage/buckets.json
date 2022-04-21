@@ -1,0 +1,34 @@
+[
+  {
+    "description" : "tbd",
+    "exposure"    : "DOWNLOAD",
+    "objects"     : "Documents",
+    "key"         : "storage",
+    "stage"       : 0,
+    "tier"        : "STANDARD"
+  },
+  {
+    "description" : "tbd",
+    "exposure"    : "PRIVATE",
+    "objects"     : "Documents",
+    "key"         : "storage",
+    "stage"       : 2,
+    "tier"        : "ARCHIVE"
+  },
+  {
+    "description" : "tbd",
+    "exposure"    : "PUBLIC",
+    "objects"     : "Files",
+    "key"         : "storage",
+    "stage"       : 0,
+    "tier"        : "STANDARD"
+  },
+  {
+    "description" : "tbd",
+    "exposure"    : "PRIVATE",
+    "objects"     : "Database",
+    "key"         : "storage",
+    "stage"       : 1,
+    "tier"        : "ARCHIVE"
+  }
+]
