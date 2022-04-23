@@ -32,6 +32,7 @@ variable "current_user_ocid" {default="ocid_user.xxx"}
 locals {
   topologies = flatten(compact([var.management == true ? "cloud" : "", var.host == true ? "host" : "", var.nodes == true ? "nodes" : "", var.container == true ? "container" : ""]))
   domains    = jsondecode(file("${path.module}/default/resident/domains.json"))
+  lifecycle  = jsondecode(file("${path.module}/library/lifecycle.json"))
   segments   = jsondecode(file("${path.module}/default/network/segments.json"))
 }
 
@@ -55,7 +56,7 @@ module "configuration" {
     class        = var.class
     encrypt      = var.create_wallet
     region       = var.location
-    stage        = var.stage
+    stage        = local.lifecycle[var.stage]
     name         = var.name
     organization = var.organization
     osn          = var.osn
