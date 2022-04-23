@@ -83,7 +83,8 @@ locals {
   secrets        = jsondecode(file("${path.module}/encryption/secrets.json"))
   wallets        = jsondecode(file("${path.module}/encryption/wallets.json"))
   # Storage Settings
-  buckets     = jsondecode(file("${path.module}/storage/buckets.json"))
+  buckets        = jsondecode(file("${path.module}/storage/buckets.json"))
+  backups        = jsondecode(file("${path.module}/storage/backups.json"))
 
   # Local variables
   defined_routes = {for segment in var.settings.segments : segment.name => {

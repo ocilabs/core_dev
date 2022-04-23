@@ -1,34 +1,12 @@
 [
   {
-    "description" : "tbd",
-    "exposure"    : "DOWNLOAD",
-    "objects"     : "Documents",
-    "key"         : "storage",
-    "stage"       : 0,
-    "tier"        : "STANDARD"
-  },
-  {
-    "description" : "tbd",
-    "exposure"    : "PRIVATE",
-    "objects"     : "Documents",
-    "key"         : "storage",
-    "stage"       : 2,
-    "tier"        : "ARCHIVE"
-  },
-  {
-    "description" : "tbd",
+    "name"        : "documents",
+    "description" : "enables file sharing over the internet",
     "exposure"    : "PUBLIC",
-    "objects"     : "Files",
-    "key"         : "storage",
+    "encryption"  : "storage",
+    "monitoring"  : true,
+    "replication" : "",
     "stage"       : 0,
-    "tier"        : "STANDARD"
-  },
-  {
-    "description" : "tbd",
-    "exposure"    : "PRIVATE",
-    "objects"     : "Database",
-    "key"         : "storage",
-    "stage"       : 1,
-    "tier"        : "ARCHIVE"
+    "tiering"     : "DISABLE"
   }
 ]
