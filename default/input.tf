@@ -49,13 +49,13 @@ locals {
   }))
   */
   # Service Settings
-  alerts         = jsondecode(file("${path.module}/resident/alerts.json"))
-  budgets        = jsondecode(templatefile("${path.module}/resident/budgets.json", {user = var.account.user_id}))
-  channels       = jsondecode(templatefile("${path.module}/resident/channels.json", {owner = var.resident.owner}))
-  controls       = jsondecode(templatefile("${path.module}/resident/controls.json", {date = timestamp()}))
-  domains        = jsondecode(file("${path.module}/resident/domains.json"))
-  operators      = jsondecode(templatefile("${path.module}/resident/operators.json", {service = local.service_name}))
-  periods        = jsondecode(file("${path.module}/resident/periods.json"))
+  alerts         = jsondecode(file("${path.module}/service/alerts.json"))
+  budgets        = jsondecode(templatefile("${path.module}/service/budgets.json", {user = var.account.user_id}))
+  channels       = jsondecode(templatefile("${path.module}/service/channels.json", {owner = var.resident.owner}))
+  controls       = jsondecode(templatefile("${path.module}/service/controls.json", {date = timestamp()}))
+  domains        = jsondecode(file("${path.module}/service/domains.json"))
+  operators      = jsondecode(templatefile("${path.module}/service/operators.json", {service = local.service_name}))
+  periods        = jsondecode(file("${path.module}/service/periods.json"))
   # Network Settings
   destinations   = jsondecode(file("${path.module}/network/destinations.json"))
   firewalls      = jsondecode(file("${path.module}/network/firewalls.json"))
