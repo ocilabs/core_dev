@@ -45,28 +45,42 @@ module "configuration" {
     user_id        = var.current_user_ocid
   }
   resident = {
-    adb          = "${var.adb_type}_${var.adb_size}"
-    budget       = var.budget
-    encrypt      = var.create_wallet
-    region       = var.location
-    stage        = local.lifecycle[var.stage]
-    name         = var.name
-    organization = var.organization
-    osn          = var.osn
-    owner        = var.owner
-    repository   = var.repository
-    topologies   = flatten(compact([
+    adb        = format(
+      "%s_%s",
+      lower(var.adb_type),
+      lower(var.adb_size)
+    )
+    budget     = var.budget
+    encrypt    = var.create_wallet
+    label      = format(
+      "%s%s%s", 
+      lower(substr(var.organization, 0, 3)), 
+      lower(substr(var.name, 0, 2)),
+      lower(substr(var.stage, 0, 3)),
+    )
+    name       = format(
+      "%s_%s_%s",
+      lower(var.organization),
+      lower(var.name),
+      lower(var.stage)
+    )
+    region     = var.location
+    stage      = local.lifecycle[var.stage]
+    osn        = var.osn
+    owner      = var.owner
+    repository = var.repository
+    topologies = flatten(compact([
       var.management == true ? "cloud" : "", 
       var.host       == true ? "host" : "", 
       var.nodes      == true ? "nodes" : "", 
       var.container  == true ? "container" : ""
     ]))
-    wallet       = var.wallet
+    wallet     = var.wallet
   }
 }
 // --- tenancy configuration --- //
 
-output "service"    {value = module.configuration.service}
+output "resident"    {value = module.configuration.resident}
 output "encryption" {value = module.configuration.encryption}
 output "network"    {value = module.configuration.network}
 output "database"   {value = module.configuration.database}
