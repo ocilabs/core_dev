@@ -12,10 +12,10 @@ output "database" {
       lower(adb.type), 
       lower(size.name)
     )
-    password     = var.service.encrypt? "${local.service_name}_${adb.password}_secret" : "${local.service_name}_${adb.password}_password"
+    password     = var.resident.encrypt? "${local.service_name}_${adb.password}_secret" : "${local.service_name}_${adb.password}_password"
     stage        = adb.stage
     storage      = size.storage
     type         = adb.type
     version      = adb.version
-  }if var.service.adb == "${adb.name}_${upper(size.name)}"]]))[0]
+  }if var.resident.adb == "${adb.name}_${upper(size.name)}"]]))[0]
 }

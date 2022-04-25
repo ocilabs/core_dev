@@ -5,18 +5,18 @@ variable "account" {
   description = "retrieved tenancy data"
   type = object({
     tenancy_id     = string,
+    class          = string,
     compartment_id = string,
     home           = string,
     user_id        = string
   })
 }
 
-variable "service" {
+variable "resident" {
   description = "configuration paramenter for the service, defined through schema.tf"
   type = object({
     adb          = string,
     budget       = number,
-    class        = string,
     encrypt      = bool,
     name         = string,
     owner        = string,
@@ -25,7 +25,6 @@ variable "service" {
     region       = string,
     repository   = string,
     stage        = string,
-    tenancy      = string,
     topologies   = list(any),
     wallet       = string
   })
@@ -52,7 +51,7 @@ locals {
   # Service Settings
   alerts         = jsondecode(file("${path.module}/resident/alerts.json"))
   budgets        = jsondecode(templatefile("${path.module}/resident/budgets.json", {user = var.account.user_id}))
-  channels       = jsondecode(templatefile("${path.module}/resident/channels.json", {owner = var.service.owner}))
+  channels       = jsondecode(templatefile("${path.module}/resident/channels.json", {owner = var.resident.owner}))
   controls       = jsondecode(templatefile("${path.module}/resident/controls.json", {date = timestamp()}))
   domains        = jsondecode(file("${path.module}/resident/domains.json"))
   operators      = jsondecode(templatefile("${path.module}/resident/operators.json", {service = local.service_name}))
@@ -92,9 +91,9 @@ locals {
   }if contains(flatten(distinct(flatten(local.firewalls[*].outgoing))), destination.name)}
   freeform_tags = {
     "framework" = "ocloud"
-    "owner"     = var.service.owner
-    "lifecycle" = var.service.stage
-    "class"     = var.service.class
+    "owner"     = var.resident.owner
+    "lifecycle" = var.resident.stage
+    "class"     = var.account.class
   }
   group_map = zipmap(
     flatten("${local.domains[*].operators}"),
@@ -136,20 +135,20 @@ locals {
     if contains(flatten(distinct(flatten(local.firewalls[*].outgoing))), destination.name)
   })
   # Computed Parameter
-  service_name  = lower("${var.service.organization}_${var.service.name}_${var.service.stage}")
+  service_name  = lower("${var.resident.organization}_${var.resident.name}_${var.resident.stage}")
   service_label = format(
     "%s%s%s", 
-    lower(substr(var.service.organization, 0, 3)), 
-    lower(substr(var.service.name, 0, 2)),
-    lower(substr(var.service.stage, 0, 3)),
+    lower(substr(var.resident.organization, 0, 3)), 
+    lower(substr(var.resident.name, 0, 2)),
+    lower(substr(var.resident.stage, 0, 3)),
   )
   subnet_cidr = {for segment in local.segments : segment.name => zipmap(
     keys(local.subnet_newbits[segment.name]),
     flatten(cidrsubnets(segment.cidr, values(local.subnet_newbits[segment.name])...))
   )}
   subnet_newbits = {for segment in local.segments : segment.name => zipmap(
-    [for subnet in local.subnets : subnet.name if contains(var.service.topologies, subnet.topology)],
-    [for subnet in local.subnets : subnet.newbits if contains(var.service.topologies, subnet.topology)]
+    [for subnet in local.subnets : subnet.name if contains(var.resident.topologies, subnet.topology)],
+    [for subnet in local.subnets : subnet.newbits if contains(var.resident.topologies, subnet.topology)]
   )}
   vcn_list   = local.segments[*].name
   zones = {for segment in local.segments : segment.name => merge(

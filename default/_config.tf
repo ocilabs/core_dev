@@ -64,8 +64,8 @@ locals {
     regions_map         = {for region in data.oci_identity_regions.tenant.regions : region.key => region.name}
     regions_map_reverse = {for region in data.oci_identity_regions.tenant.regions : region.name => region.key}
     # Deployment region
-    region_key          = local.regions_map_reverse[var.service.region]
-    region_name         = var.service.region
+    region_key          = local.regions_map_reverse[var.resident.region]
+    region_name         = var.resident.region
     # Home region key obtained from the tenancy data source
     home_region_key     = data.oci_identity_tenancy.tenant.home_region_key
     # Region key obtained from the region name
