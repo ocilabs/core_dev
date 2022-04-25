@@ -44,7 +44,7 @@ module "configuration" {
     home           = var.region
     user_id        = var.current_user_ocid
   }
-  resident = {
+  service = {
     adb        = format(
       "%s_%s",
       lower(var.adb_type),
@@ -80,8 +80,8 @@ module "configuration" {
 }
 // --- tenancy configuration --- //
 
-output "resident"    {value = module.configuration.resident}
-output "encryption" {value = module.configuration.encryption}
-output "network"    {value = module.configuration.network}
-output "database"   {value = module.configuration.database}
-output "storage"    {value = module.configuration.storage}
+output "resident"   {value = module.configuration.resident}
+#output "encryption" {value = module.configuration.encryption}
+#output "network"    {value = module.configuration.network}
+#output "database"   {value = module.configuration.database}
+#output "storage"    {value = module.configuration.storage}

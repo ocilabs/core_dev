@@ -3,29 +3,26 @@
 
 output "resident" {
   value = {
-    tenancy = {
-      groups       = {
-        for operator in flatten(local.domains[*].operators) : operator => "${var.resident.name}_${operator}"
-      }
-      tag_namespaces = merge(
-        {for space in distinct(local.controls[*].name): "${var.resident.name}_${space}" => min([for monitor in local.controls: monitor.stage if monitor.name == space]...)},
-        {"${var.resident.name}_budget" : min(local.budgets.*.stage...)}
-      )
+    owner        = var.service.owner
+    region       = {
+      key  = local.region_key
+      name = local.region_name
     }
+    repository   = var.service.repository
     service = {
       budgets = merge(
         zipmap(
-          flatten([for period in local.periods: [for alert in local.alerts: "${var.resident.name}_${lower(period.type)}" if alert.name == "compartment" && period.name == "default" && var.resident.budget > 0]]),
+          flatten([for period in local.periods: [for alert in local.alerts: "${var.service.name}_${lower(period.type)}" if alert.name == "compartment" && period.name == "default" && var.service.budget > 0]]),
           flatten([for period in local.periods: [for alert in local.alerts: {
-            amount         = var.resident.budget
+            amount         = var.service.budget
             budget_processing_period_start_offset = period.offset
-            display_name   = "${var.resident.name}_${lower(period.type)}"
+            display_name   = "${var.service.name}_${lower(period.type)}"
             reset_period   = period.type
             stage          = 0
             target_type    = "COMPARTMENT"
             threshold      = alert.threshold
             threshold_type = alert.measure
-          } if alert.name == "compartment" && period.name == "default" && var.resident.budget > 0]])
+          } if alert.name == "compartment" && period.name == "default" && var.service.budget > 0]])
         ),
         zipmap(
           flatten([for domain in local.domains: [for period in local.periods: [for alert in local.alerts: "${domain.name}_${lower(period.type)}" if alert.name == "compartment" && period.name == "default" && domain.budget > 0]]]),
@@ -55,31 +52,24 @@ output "resident" {
         )
       )
       compartments = {
-        for domain in local.domains : "${var.resident.name}_${domain.name}_compartment" => domain.stage
+        for domain in local.domains : "${var.service.name}_${domain.name}_compartment" => domain.stage
       }
-      notifications = {for channel in local.channels : "${var.resident.name}_${channel.name}" => {
-        topic     = "${var.resident.name}_${channel.name}"
+      notifications = {for channel in local.channels : "${var.service.name}_${channel.name}" => {
+        topic     = "${var.service.name}_${channel.name}"
         protocol  = channel.type
         endpoint  = channel.address
       } if contains(distinct(flatten("${local.domains[*].channels}")), channel.name)}
-      owner        = var.resident.owner
       policies     = {for operator in local.operators : operator.name => {
-        name        = "${var.resident.name}_${operator.name}"
+        name        = "${var.service.name}_${operator.name}"
         compartment = local.group_map[operator.name]
         rules       = operator.rules
       }if contains(keys(local.group_map), operator.name) }
-      region       = {
-        key  = local.region_key
-        name = local.region_name
-      }
-      repository   = var.resident.repository
-      stage        = var.resident.stage
       tags = merge(
         {for tag in local.controls : tag.name => {
           cost_tracking = false
           default       = tag.values[0]
           name          = tag.name
-          namespace     = "${var.resident.name}_${tag.monitor}"
+          namespace     = "${var.service.name}_${tag.monitor}"
           stage         = tag.stage
           values        = tag.values
         }},
@@ -87,10 +77,20 @@ output "resident" {
           cost_tracking = true
           default       = {for budget in local.budgets : budget.monitor => budget.name...}[tag].0
           name          = tag
-          namespace     = "${var.resident.name}_budget"
+          namespace     = "${var.service.name}_budget"
           stage         = min({for budget in local.budgets : budget.monitor => budget.stage...}[tag]...)
           values        = {for budget in local.budgets : budget.monitor => budget.name...}[tag]
         }}
+      )
+    }
+    stage        = var.service.stage
+    tenancy = {
+      groups       = {
+        for operator in flatten(local.domains[*].operators) : operator => "${var.service.name}_${operator}"
+      }
+      tag_namespaces = merge(
+        {for space in distinct(local.controls[*].monitor): "${var.service.name}_${space}" => min([for value in local.controls: value.stage if value.monitor == space]...)},
+        {"${var.service.name}_budget" : min(local.budgets.*.stage...)}
       )
     }
   }
