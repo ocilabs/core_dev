@@ -30,12 +30,10 @@ variable "current_user_ocid" {default="ocid_user.xxx"}
 
 // --- tenancy configuration --- //
 locals {
-  topologies = flatten(compact([var.management == true ? "cloud" : "", var.host == true ? "host" : "", var.nodes == true ? "nodes" : "", var.container == true ? "container" : ""]))
-  domains    = jsondecode(file("${path.module}/default/resident/domains.json"))
-  lifecycle  = jsondecode(file("${path.module}/library/lifecycle.json"))
-  segments   = jsondecode(file("${path.module}/default/network/segments.json"))
+  lifecycle      = jsondecode(file("${path.module}/library/lifecycle.json"))
+  backup         = jsondecode(file("${path.module}/library/backup.json"))
+  classification = jsondecode(file("${path.module}/library/classification.json"))
 }
-
 module "configuration" {
   source         = "./default/"
   providers = {oci = oci.service}
@@ -45,15 +43,10 @@ module "configuration" {
     home           = var.region
     user_id        = var.current_user_ocid
   }
-  settings = {
-    topologies = local.topologies
-    domains    = local.domains
-    segments   = local.segments
-  }
-  options = {
+  service = {
     adb          = "${var.adb_type}_${var.adb_size}"
     budget       = var.budget
-    class        = var.class
+    class        = local.classification[var.class]
     encrypt      = var.create_wallet
     region       = var.location
     stage        = local.lifecycle[var.stage]
@@ -63,13 +56,18 @@ module "configuration" {
     owner        = var.owner
     repository   = var.repository
     tenancy      = var.tenancy_ocid
+    topologies   = flatten(compact([
+      var.management == true ? "cloud" : "", 
+      var.host       == true ? "host" : "", 
+      var.nodes      == true ? "nodes" : "", 
+      var.container  == true ? "container" : ""
+    ]))
     wallet       = var.wallet
   }
 }
 // --- tenancy configuration --- //
 
-#output "tenancy"    {value = module.configuration.tenancy}
-#output "resident"   {value = module.configuration.resident}
+output "resident"   {value = module.configuration.resident}
 #output "encryption" {value = module.configuration.encryption}
 #output "network"    {value = module.configuration.network}
 #output "database"   {value = module.configuration.database}
