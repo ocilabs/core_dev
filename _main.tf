@@ -80,8 +80,8 @@ module "configuration" {
 }
 // --- tenancy configuration --- //
 
-output "resident"   {value = module.configuration.resident}
+#output "resident"   {value = module.configuration.resident}
 #output "encryption" {value = module.configuration.encryption}
 #output "network"    {value = module.configuration.network}
 #output "database"   {value = module.configuration.database}
-#output "storage"    {value = module.configuration.storage}
+output "storage"    {value = module.configuration.storage}

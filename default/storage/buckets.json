@@ -1,10 +1,11 @@
 [
   {
-    "name"        : "documents",
+    "domain"      : "application",
     "description" : "enables file sharing over the internet",
     "exposure"    : "PUBLIC",
     "encryption"  : "storage",
     "monitoring"  : true,
+    "name"        : "documents",
     "replication" : "",
     "stage"       : 0,
     "tiering"     : "DISABLE"

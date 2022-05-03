@@ -6,6 +6,7 @@ output "storage" {
     buckets = merge(
       {for bucket in local.buckets: format("%s_%s_%02d", var.service.name, "share", index(local.buckets, bucket) + 1) => {
         access_type  = lookup({"PRIVATE"="NoPublicAccess", "PUBLIC"="ObjectRead", "DOWNLOAD"="ObjectReadWithoutList"}, bucket.exposure, "NoPublicAccess")
+        compartment  = "${var.service.name}_${bucket.domain}_compartment"
         secret       = bucket.encryption
         metadata     = bucket.description
         name         = format("%s_%s_%s", var.service.name, bucket.name, "share")
@@ -15,6 +16,7 @@ output "storage" {
       }},
       {for bucket in local.buckets: format("%s_%s_%02d", var.service.name, "archive", index(local.buckets, bucket) + 1)  => {
         access_type  = lookup({"PRIVATE"="NoPublicAccess", "PUBLIC"="ObjectRead", "DOWNLOAD"="ObjectReadWithoutList"}, bucket.exposure, "NoPublicAccess")
+        compartment  = "${var.service.name}_${bucket.domain}_compartment"
         secret       = bucket.encryption
         metadata     = bucket.description
         name         = format("%s_%s_%s", var.service.name, bucket.name, "archive")
@@ -24,6 +26,7 @@ output "storage" {
       }if bucket.tiering == "ENABLE"},
       {for backup in local.backups: format("%s_%s_%02d", var.service.name, "backup", index(local.backups, backup) + 1)  => {
         access_type  = "PRIVATE"
+        compartment  = "${var.service.name}_${backup.domain}_compartment"
         secret       = backup.encryption
         metadata     = backup.description
         name         = format("%s_%s_%s", var.service.name, backup.name, "backup")

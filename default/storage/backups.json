@@ -1,6 +1,7 @@
 [
   {
     "description" : "backup storage for databases",
+    "domain"      : "database",
     "encryption"  : "storage",
     "name"        : "database",
     "stage"       : 2
